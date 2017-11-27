@@ -12,7 +12,7 @@ def compare_passwords(password):
 
 def get_user_password(password):
     return compare_passwords(password) and password or get_user_password(
-        getpass.getpass('The passwords missmatch. Try again: '))
+        getpass.getpass('The passwords mismatch. Try again: '))
 
 
 def make_user_data_dict(username, company_name, password):
@@ -21,6 +21,19 @@ def make_user_data_dict(username, company_name, password):
         'company_name': company_name,
         'password': password
     }
+
+
+def has_upper_and_lower_cases(password):
+    return not password.islower()
+
+
+def has_alpha_and_digit(password):
+    return sum([word.isdigit() for word in password]) != 0 and sum(
+        [word.isalpha() for word in password]) !=0
+
+
+def has_specials(password):
+    return not password.isalnum()
 
 
 def get_password_strength(password):
