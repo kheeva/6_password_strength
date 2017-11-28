@@ -45,28 +45,18 @@ def has_specials(password):
     return not password.isalnum()
 
 
-def has_more_than_8_symbols(password):
-    return len(password) > 8
-
-
-def has_more_than_12_symbols(password):
-    return len(password) > 10
-
-
-def has_more_than_20_symbols(password):
-    return len(password) > 20
-
-
-def is_not_blacklisted_password(password):
-    try:
-        loaded_bad_passwords = load_bad_passwords(sys.argv[1])
-    except FileNotFoundError as error:
-        exit(error)
-    else:
-        loaded_bad_passwords = loaded_bad_passwords.splitlines()
-        if password in loaded_bad_passwords:
-            return False
-        return True
+def rate_password_length(password):
+    password_length = len(password)
+    password_rate = 0
+    if password_length > 20:
+        password_rate += 4
+    elif password_length > 12:
+        password_rate += 3
+    elif password_length > 8:
+        password_rate += 2
+    elif password_length > 6:
+        password_rate += 1
+    return password_rate
 
 
 def has_not_personal_info(user_data):
@@ -80,20 +70,13 @@ def is_not_date_or_phone(password):
     return not (password.isdigit() and len(password) in [7, 8, 10])
 
 
-def get_password_strength(user_data):
+def get_password_strength(user_data, password_blacklist):
     password_strength = 1
-    if len(sys.argv) == 2:
-        if is_not_blacklisted_password(user_data['password']):
-            password_strength += 1
-        else:
-            return 1
 
-    if is_not_date_or_phone(user_data['password']):
-        password_strength += 1
-    else:
-        return 1
-
-    if has_not_personal_info(user_data):
+    if user_data['password'] not in password_blacklist and (
+        is_not_date_or_phone(user_data['password'])) and (
+            has_not_personal_info(user_data)) and (
+            len(get_user_password('password')) > 4):
         password_strength += 1
     else:
         return 1
@@ -101,22 +84,32 @@ def get_password_strength(user_data):
     password_strength += sum([
         has_upper_and_lower_cases(user_data['password']),
         has_alpha_and_digit(user_data['password']),
-        has_specials(user_data['password']),
-        has_more_than_8_symbols(user_data['password']),
-        has_more_than_12_symbols(user_data['password']),
-        has_more_than_20_symbols(user_data['password'])])
+        has_specials(user_data['password'])])
+
+    if password_strength == 5:
+        password_strength += 1
+
+    password_strength += rate_password_length(user_data['password'])
 
     return password_strength
 
 
 def main():
+    passwords_blacklist = []
+
+    if len(sys.argv) == 2:
+        try:
+            passwords_blacklist = load_bad_passwords(sys.argv[1]).splitlines()
+        except FileNotFoundError as error:
+            print(error, '\nWorking without a blacklist file..')
+
     user_data = make_user_data_dict(
                     get_user_info(input('Input username: ')),
                     get_user_info(input('Input the name of your company: ')),
                     get_user_password(getpass.getpass('Input your password: ')))
 
     print('\nYour password scored {} points out of 10.'.format(
-        get_password_strength(user_data)))
+        get_password_strength(user_data, passwords_blacklist)))
 
 
 if __name__ == '__main__':
