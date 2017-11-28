@@ -5,7 +5,7 @@ The program rates a password from 1 to 10.
 # How to Install
 
 You need to download and install python3 if you already haven't: http://python.org .
-Also you need some common password dictionaty. You can download it from the Internet, for example,
+Also you can download some common password dictionary for blacklist checks. You can download it from the Internet, for example,
 https://weakpass.com/wordlist
 
 # How to use
