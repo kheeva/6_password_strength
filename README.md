@@ -12,7 +12,7 @@ https://weakpass.com/wordlist
 
 Run the script:
 ```
-python password_strength.py path_to_passwords_file
+python password_strength.py [path_to_passwords_file]
 ```
 
 You can see the result in console:
