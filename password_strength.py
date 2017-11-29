@@ -48,13 +48,18 @@ def has_specials(password):
 def rate_password_length(password):
     password_length = len(password)
     password_rate = 0
-    if password_length > 20:
+    excellent_length = 20
+    good_length = 12
+    advanced_length = 8
+    minimal_length = 6
+
+    if password_length >= excellent_length:
         password_rate += 4
-    elif password_length > 12:
+    elif password_length >= good_length:
         password_rate += 3
-    elif password_length > 8:
+    elif password_length >= advanced_length:
         password_rate += 2
-    elif password_length > 6:
+    elif password_length >= minimal_length:
         password_rate += 1
     return password_rate
 
@@ -87,7 +92,7 @@ def get_password_strength(user_data, password_blacklist):
         has_alpha_and_digit(user_data['password']),
         has_specials(user_data['password'])])
 
-    # If a password pass all of the tests, we increase his rate by 1
+    # If a password pass all of the tests, we increase its rate by 1
     all_passed_tests_strength = 5
     if password_strength == all_passed_tests_strength:
         password_strength += 1

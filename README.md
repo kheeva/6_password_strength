@@ -4,7 +4,12 @@ The program rates a password from 1 to 10.
 
 # How to Install
 
-You need to download and install python3 if you already haven't: http://python.org .
+You need to download and install python3 if you already haven't: http://python.org and getpass module which you can download using pip:
+
+```bash
+pip install getpass
+```
+
 Also you can download some common password dictionary for blacklist checks. You can download it from the Internet, for example,
 https://weakpass.com/wordlist
 
