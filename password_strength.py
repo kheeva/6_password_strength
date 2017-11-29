@@ -4,8 +4,8 @@ import getpass
 
 
 def load_bad_passwords(file_path):
-    with open(file_path, 'rb') as text_file:
-        text_data = text_file.read().decode('utf-8')
+    with open(file_path, 'r', encoding='utf8') as text_file:
+        text_data = text_file.read()
     return text_data
 
 
@@ -37,8 +37,8 @@ def has_upper_and_lower_cases(password):
 
 
 def has_alpha_and_digit(password):
-    return sum([word.isdigit() for word in password]) != 0 and sum(
-        [word.isalpha() for word in password]) != 0
+    return sum([symbol.isdigit() for symbol in password]) != 0 and sum(
+        [symbol.isalpha() for symbol in password]) != 0
 
 
 def has_specials(password):
@@ -72,11 +72,12 @@ def is_not_date_or_phone(password):
 
 def get_password_strength(user_data, password_blacklist):
     password_strength = 1
+    password_length_rate = rate_password_length(user_data['password'])
 
     if user_data['password'] not in password_blacklist and (
         is_not_date_or_phone(user_data['password'])) and (
             has_not_personal_info(user_data)) and (
-            len(get_user_password('password')) > 4):
+            password_length_rate != 0):
         password_strength += 1
     else:
         return 1
@@ -86,10 +87,11 @@ def get_password_strength(user_data, password_blacklist):
         has_alpha_and_digit(user_data['password']),
         has_specials(user_data['password'])])
 
+    # If a password pass all of the tests, we increase his rate by 1
     if password_strength == 5:
         password_strength += 1
 
-    password_strength += rate_password_length(user_data['password'])
+    password_strength += password_length_rate
 
     return password_strength
 
