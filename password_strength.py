@@ -88,7 +88,8 @@ def get_password_strength(user_data, password_blacklist):
         has_specials(user_data['password'])])
 
     # If a password pass all of the tests, we increase his rate by 1
-    if password_strength == 5:
+    all_passed_tests_strength = 5
+    if password_strength == all_passed_tests_strength:
         password_strength += 1
 
     password_strength += password_length_rate
